@@ -35,7 +35,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n.layer1 {\n    position: absolute; /* Относительное позиционирование */\n    background: steelblue; /* Цвет фона */\n    top: 90px; /* Высота блока */\n    left: 15px;\n}\n.layer2 {\n    position: absolute; /* Абсолютное позиционирование */\n    top: 90px; /* Положение от нижнего края */\n    right: 15px; /* Положение от правого края */\n    line-height: 1px;\n}", ""]);
 
 // exports
 
