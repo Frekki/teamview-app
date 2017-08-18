@@ -27,12 +27,9 @@ export class DashboardComponent implements OnInit {
         });
 
         this.authService.getAllTeams().subscribe(teams => {
-            // for(let i = 0; i < teams.length; i++){
-            //     this.teams.push(JSON.stringify(teams));
-            // }
-            console.log(teams);
+            // console.log(teams);
             this.teams = Object.keys(teams).map(key => teams[key]);
-            console.log(this.teams);
+            // console.log(this.teams);
         },
         err => {
             console.log(err);
