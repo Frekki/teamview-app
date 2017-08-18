@@ -58,19 +58,27 @@ export class AuthService {
   }
 
   // Teams
-    addTeam(team){
-        let headers = new Headers();
-        headers.append('Content-Type','application/json');
-        return this.http.post('http://localhost:3000/teams/addteam' || 'teams/addteam', team,{headers: headers})
-            .map(res => res.json());
-    }
+  addTeam(team){
+      let headers = new Headers();
+      headers.append('Content-Type','application/json');
+      return this.http.post('http://localhost:3000/teams/addteam' || 'teams/addteam', team,{headers: headers})
+          .map(res => res.json());
+  }
 
-    getAllTeams(){
-        let headers = new Headers();
-        this.loadToken();
-        headers.append('Authorization', this.authToken);
-        headers.append('Content-Type','application/json');
-        return this.http.get('http://localhost:3000/teams/dashboard' || 'teams/dashboard',{headers: headers})
-            .map(res => res.json());
-    }
+  loadTeam(){
+      const teams = localStorage.getItem('team');
+      this.team = teams;
+  }
+
+  getAllTeams(){
+      let headers = new Headers();
+      this.loadToken();
+      this.loadTeam();
+      headers.append('Authorization', this.authToken);
+      headers.append('Teams', this.team);
+      headers.append('Content-Type','application/json');
+      return this.http.get('http://localhost:3000/teams/dashboard' || 'teams/dashboard',{headers: headers})
+          .map((res) => res.json());
+
+  }
 }

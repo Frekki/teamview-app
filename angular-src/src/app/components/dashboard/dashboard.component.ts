@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import { Router } from "@angular/router";
-import {stringifyElement} from "@angular/platform-browser/testing/browser_util";
-import {toArray} from "rxjs/operator/toArray";
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +9,7 @@ import {toArray} from "rxjs/operator/toArray";
 })
 export class DashboardComponent implements OnInit {
     user: Object;
-    teams: any = [];
+    teams: any;
     //teamName: Object;
 
     constructor(
@@ -32,8 +30,8 @@ export class DashboardComponent implements OnInit {
             // for(let i = 0; i < teams.length; i++){
             //     this.teams.push(JSON.stringify(teams));
             // }
-                console.log(teams);
-            this.teams = Object.keys(teams).map(i => Object.assign(teams[i], {teams: i}));;
+            console.log(teams);
+            this.teams = Object.keys(teams).map(key => teams[key]);
             console.log(this.teams);
         },
         err => {
