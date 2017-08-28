@@ -23,6 +23,7 @@
     "angular2-flash-messages": "*",
     "angular2-jwt": "^0.2.3",
     "core-js": "*",
+    "d3": "^4.10.0",
     "rxjs": "*",
     "ts-helpers": "*",
     "zone.js": "*"
@@ -30,6 +31,10 @@
   "devDependencies": {
     "@angular/cli": "^1.3.0",
     "@angular/compiler-cli": "*",
+    "@types/d3-array": "^1.2.1",
+    "@types/d3-axis": "^1.0.9",
+    "@types/d3-scale": "^1.0.10",
+    "@types/d3-selection": "^1.1.0",
     "@types/jasmine": "*",
     "@types/node": "^*",
     "codelyzer": "*",

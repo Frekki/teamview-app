@@ -14,11 +14,11 @@ export class ValidateService {
   }
 
   validateNewTeam(team){
-  if(team.teamName == undefined || team.sprintNumber == undefined || team.completedAt == undefined || team.completed == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
-    return false;
-  } else {
-    return true;
-  }
+    if(team.teamName == undefined || team.sprintNumber == undefined || team.completedAt == undefined || team.completed == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
+      return false;
+    } else {
+      return true;
+    }
   }
 
   validateEmail(email){

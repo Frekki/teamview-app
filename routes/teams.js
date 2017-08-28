@@ -8,7 +8,7 @@ const User = require('../models/user');
 
 // Add Team
 router.post('/addteam', (req, res, next) => {
-    let newTeam = new Team({
+    let team = new Team({
         teamName: req.body.teamName,
         sprintNumber: req.body.sprintNumber,
         completed: req.body.completed,
@@ -18,7 +18,7 @@ router.post('/addteam', (req, res, next) => {
         // _creator: req.user._id
     });
 
-    Team.addTeam(newTeam, (err, team) =>{
+    Team.addTeam(team, (err, teams) =>{
        if(err){
            res.json({success: false, msg: 'Failed to create team'});
        } else {
@@ -28,7 +28,10 @@ router.post('/addteam', (req, res, next) => {
 });
 
 router.get('/dashboard', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-    res.json({team: req.team});
+    Team.find({}).then(teams => {
+        res.send({teams});
+    });
+
 });
 
 module.exports = router;

@@ -17,6 +17,51 @@
             <li class="list-group-item">Completed: {{team.completed}}</li>
             <li class="list-group-item">SP Achieved: {{team.spAchieved}}</li>
             <li class="list-group-item">SP Estimated: {{team.spEstimated}}</li>
+            <svg width="100" height= "100"> 
+                <!-- <rect width="100" height="<script>team.spAchieved</script>" fill="blue">{{team.spAchieved}}</rect>
+                <rect width="100" height="<script>team.spEstimated</script>" fill="rgba(0,255,0,0.5)"></rect> -->
+            </svg>
+            <!-- <script src="https://d3js.org/d3.v4.min.js"></script>
+            <script>
+
+                const dataArray = [team.spAchieved, team.spEstimated];
+                const width = 500;
+                const height = 500;
+
+                const widthScale = d3.scaleLinear()
+                    .domain([0, spAchieved])
+                    .range([0, width]);
+
+                const color = d3.scaleLinear()
+                    .domain([0, spAchieved])
+                    .range(["red", "blue"]);
+
+                const axis = d3.axisBottom(widthScale)
+                    .ticks(5);
+
+                const canvas = d3.select("body")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(20, 0)");
+
+                const bars = canvas.selectAll("rect")
+                    .data(dataArray)
+                    .enter()
+                    .append("rect")
+                    .attr("width", d => widthScale(d))
+                    .attr("height", 50)
+                    .attr("fill", d => color(d))
+                    .attr("y", (d,i) => i * 100);
+
+                canvas.append("g")
+                    .attr("transform", "translate(0, 400)")
+                    .call(axis);               
+
+                console.log("I'm alive!");
+
+            </script> -->
             <br/><br/>
         </div>
     </ul>

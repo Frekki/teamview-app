@@ -285,7 +285,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron text-center\" *ngIf=\"user\">\n    <h1>TEAM View</h1>\n\n    <div class=\"layer1\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/profile']\">{{user.name}}</a>\n    </div>\n    <div class=\"layer2\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/addteam']\">Add New Team</a>\n    </div>\n\n    <div>\n    <ul class=\"list-group\" *ngFor=\"let team of teams\">\n        <li  class=\"list-group-item\">Team Name: {{team.teamName}}</li>\n        <li class=\"list-group-item\">Sprint Number: {{team.sprintNumber}}</li>\n    </ul>\n    </div>\n</div>"
+module.exports = "<div class=\"jumbotron text-center\" *ngIf=\"user\">\n    <h1>TEAM View</h1>\n\n    <div class=\"layer1\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/profile']\">{{user.name}}</a>\n    </div>\n    <div class=\"layer2\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/addteam']\">Add New Team</a>\n    </div>\n\n    <div>\n    <ul class=\"list-group\" *ngFor=\"let newTeam of teams;\">\n        <div *ngFor=\"let team of newTeam;\">\n            <li class=\"list-group-item\">Team Name: {{team.teamName}}</li>\n            <li class=\"list-group-item\">Sprint Number: {{team.sprintNumber}}</li>\n            <li class=\"list-group-item\">Completed At: {{team.completedAt}}</li>\n            <li class=\"list-group-item\">Completed: {{team.completed}}</li>\n            <li class=\"list-group-item\">SP Achieved: {{team.spAchieved}}</li>\n            <li class=\"list-group-item\">SP Estimated: {{team.spEstimated}}</li>\n            <svg width=\"100\" height= \"100\"> \n                <!-- <rect width=\"100\" height=\"<script>team.spAchieved</script>\" fill=\"blue\">{{team.spAchieved}}</rect>\n                <rect width=\"100\" height=\"<script>team.spEstimated</script>\" fill=\"rgba(0,255,0,0.5)\"></rect> -->\n            </svg>\n            <!-- <script src=\"https://d3js.org/d3.v4.min.js\"></script>\n            <script>\n\n                const dataArray = [team.spAchieved, team.spEstimated];\n                const width = 500;\n                const height = 500;\n\n                const widthScale = d3.scaleLinear()\n                    .domain([0, spAchieved])\n                    .range([0, width]);\n\n                const color = d3.scaleLinear()\n                    .domain([0, spAchieved])\n                    .range([\"red\", \"blue\"]);\n\n                const axis = d3.axisBottom(widthScale)\n                    .ticks(5);\n\n                const canvas = d3.select(\"body\")\n                    .append(\"svg\")\n                    .attr(\"width\", width)\n                    .attr(\"height\", height)\n                    .append(\"g\")\n                    .attr(\"transform\", \"translate(20, 0)\");\n\n                const bars = canvas.selectAll(\"rect\")\n                    .data(dataArray)\n                    .enter()\n                    .append(\"rect\")\n                    .attr(\"width\", d => widthScale(d))\n                    .attr(\"height\", 50)\n                    .attr(\"fill\", d => color(d))\n                    .attr(\"y\", (d,i) => i * 100);\n\n                canvas.append(\"g\")\n                    .attr(\"transform\", \"translate(0, 400)\")\n                    .call(axis);               \n\n                console.log(\"I'm alive!\");\n\n            </script> -->\n            <br/><br/>\n        </div>\n    </ul>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -297,6 +297,7 @@ module.exports = "<div class=\"jumbotron text-center\" *ngIf=\"user\">\n    <h1>
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3_selection__ = __webpack_require__("../../../../d3-selection/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -309,12 +310,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var DashboardComponent = (function () {
-    //teamName: Object;
     function DashboardComponent(authService, router) {
         this.authService = authService;
         this.router = router;
-        this.teams = [];
+        this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -325,19 +326,114 @@ var DashboardComponent = (function () {
             return false;
         });
         this.authService.getAllTeams().subscribe(function (teams) {
-            // for(let i = 0; i < teams.length; i++){
-            //     this.teams.push(JSON.stringify(teams));
-            // }
             console.log(teams);
-            _this.teams = Object.keys(teams).map(function (i) { return Object.assign(teams[i], { teams: i }); });
-            ;
+            _this.teams = Object.keys(teams).map(function (key) { return teams[key]; });
+            console.log(_this.teams[0][1].spAchieved);
             console.log(_this.teams);
+            var dataset = [_this.teams[0][0].spAchieved, _this.teams[0][0].spEstimated];
+            var w = 100;
+            var h = 100;
+            var barPadding = 1;
+            console.log(dataset[1]);
+            var svg = __WEBPACK_IMPORTED_MODULE_3_d3_selection__["a" /* select */]("body")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+            svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", function (d, i) { return i * (w / dataset.length); })
+                .attr("y", function (d) { return h - d; })
+                .attr("width", w / dataset.length - barPadding)
+                .attr("height", function (d) { return d; })
+                .attr("fill", function (d) { return "rgb(100, 0, " + (d * 5) + ")"; });
+            svg.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function (d) { return d; })
+                .attr("x", function (d, i) { return i * (w / dataset.length) + 15; })
+                .attr("y", function (d) { return h - (d * 4) + 45; });
+            // const dataArray = [this.teams.spAchieved, this.teams.spEstimated];
+            // const widthScale = d3Scale.scaleLinear()
+            //     .domain([0, 100])
+            //     .range([0, 500]);
+            // // const color = d3Scale.scaleLinear()
+            // //     .domain([0, teams.spAchieved])
+            // //     .range();
+            // const axis = d3Axis.axisBottom(widthScale)
+            //     .ticks(5);
+            // const canvas = d3.select("li")
+            //     .append("svg")
+            //     .attr("width", 500)
+            //     .attr("height", 500)
+            //     .append("g")
+            //     .attr("transform", "translate(20, 0)");
+            // console.log(dataArray);
+            // console.log(this.teams.spAchieved);
+            // const bars = canvas.selectAll("rect")
+            //     .data(dataArray)
+            //     .enter()
+            //     .append("rect")
+            //     .attr("width", d => widthScale(d))
+            //     .attr("height", 50)
+            //     // .attr("fill", d => color(d))
+            //     .attr("y", (d, i) => i * 100);
+            // canvas.append("g")
+            //     .attr("transform", "translate(0, 400)")
+            //     .call(axis);
+            // console.log("I'm alive!");
+            // const initSvg = () => {     //
+            //     this.svg = d3.select("svg");
+            //     this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
+            //     this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
+            //     this.g = this.svg.append("g")
+            //         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+            // };
+            // const initAxis = () => {
+            //     this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
+            //     this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
+            //     this.x.domain(teams.map((d) => d.spAchieved));
+            //     this.y.domain([0, teams.spEstimated]);
+            // };
+            // const drawAxis = () => {
+            //     this.g.append("g")
+            //         .attr("class", "axis axis--x")
+            //         .attr("transform", "translate(0," + this.height + ")")
+            //         .call(d3Axis.axisBottom(this.x));
+            //     this.g.append("g")
+            //         .attr("class", "axis--y")
+            //         .call(d3Axis.axisLeft(this.y).ticks(10, " tasks"))
+            //         .append("text")
+            //         .attr("class", "axis-title")
+            //         .attr("transform", "rotate(-90)")
+            //         .attr("y", 6)
+            //         .attr("dy", "0.71em")
+            //         .attr("text-anchor", "end")
+            //         .text("Achieved");
+            // };
+            // const drawBars = () => {
+            //     this.g.selectAll(".bar")
+            //         .data(this.teams)
+            //         .enter().append("rect")
+            //         .attr("class", "bar")
+            //         .attr("x", d => this.x(d.teams.spAchieved))
+            //         .attr("y", d => this.y(d.teams.spEstimated))
+            //         .attr("width", this.x.bandwidth())
+            //         .attr("height", d => this.height - this.y(d.spEstimated));
+            // };
+            // initSvg()
+            // initAxis();
+            // drawAxis();
+            // drawBars();     //
         }, function (err) {
             console.log(err);
             return false;
         });
     };
     DashboardComponent = __decorate([
+        //
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-dashboard',
             template: __webpack_require__("../../../../../src/app/components/dashboard/dashboard.component.html"),
@@ -882,10 +978,16 @@ var AuthService = (function () {
         return this.http.post('http://localhost:3000/teams/addteam' || 'teams/addteam', team, { headers: headers })
             .map(function (res) { return res.json(); });
     };
+    AuthService.prototype.loadTeam = function () {
+        var teams = localStorage.getItem('team');
+        this.team = teams;
+    };
     AuthService.prototype.getAllTeams = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         this.loadToken();
+        this.loadTeam();
         headers.append('Authorization', this.authToken);
+        headers.append('Teams', this.team);
         headers.append('Content-Type', 'application/json');
         return this.http.get('http://localhost:3000/teams/dashboard' || 'teams/dashboard', { headers: headers })
             .map(function (res) { return res.json(); });
