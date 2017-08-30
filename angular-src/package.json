@@ -24,6 +24,7 @@
     "angular2-jwt": "^0.2.3",
     "core-js": "*",
     "d3": "^4.10.0",
+    "moment": "^2.18.1",
     "rxjs": "*",
     "ts-helpers": "*",
     "zone.js": "*"
