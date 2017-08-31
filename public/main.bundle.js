@@ -285,7 +285,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/dashboard/dashboard.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron text-center\" *ngIf=\"user\">\n    <h1>TEAM View</h1>\n\n    <div class=\"layer1\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/profile']\">{{user.name}}</a>\n    </div>\n    <div class=\"layer2\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/addteam']\">Add New Team</a>\n    </div>\n\n    <div>\n    <ul class=\"list-group\" *ngFor=\"let newTeam of teams;\">\n        <div *ngFor=\"let team of newTeam;\">\n            <li class=\"list-group-item\">Team Name: {{team.teamName}}</li>\n            <li class=\"list-group-item\">Sprint Number: {{team.sprintNumber}}</li>\n            <li class=\"list-group-item\">Completed At: {{team.completedAt}}</li>\n            <li class=\"list-group-item\">Completed: {{team.completed}}</li>\n            <li class=\"list-group-item\">SP Achieved: {{team.spAchieved}}</li>\n            <li class=\"list-group-item\">SP Estimated: {{team.spEstimated}}</li>\n            <svg width=\"100\" height= \"100\"> \n                <!-- <rect width=\"100\" height=\"<script>team.spAchieved</script>\" fill=\"blue\">{{team.spAchieved}}</rect>\n                <rect width=\"100\" height=\"<script>team.spEstimated</script>\" fill=\"rgba(0,255,0,0.5)\"></rect> -->\n            </svg>\n            <!-- <script src=\"https://d3js.org/d3.v4.min.js\"></script>\n            <script>\n\n                const dataArray = [team.spAchieved, team.spEstimated];\n                const width = 500;\n                const height = 500;\n\n                const widthScale = d3.scaleLinear()\n                    .domain([0, spAchieved])\n                    .range([0, width]);\n\n                const color = d3.scaleLinear()\n                    .domain([0, spAchieved])\n                    .range([\"red\", \"blue\"]);\n\n                const axis = d3.axisBottom(widthScale)\n                    .ticks(5);\n\n                const canvas = d3.select(\"body\")\n                    .append(\"svg\")\n                    .attr(\"width\", width)\n                    .attr(\"height\", height)\n                    .append(\"g\")\n                    .attr(\"transform\", \"translate(20, 0)\");\n\n                const bars = canvas.selectAll(\"rect\")\n                    .data(dataArray)\n                    .enter()\n                    .append(\"rect\")\n                    .attr(\"width\", d => widthScale(d))\n                    .attr(\"height\", 50)\n                    .attr(\"fill\", d => color(d))\n                    .attr(\"y\", (d,i) => i * 100);\n\n                canvas.append(\"g\")\n                    .attr(\"transform\", \"translate(0, 400)\")\n                    .call(axis);               \n\n                console.log(\"I'm alive!\");\n\n            </script> -->\n            <br/><br/>\n        </div>\n    </ul>\n    </div>\n</div>\n"
+module.exports = "<div class=\"jumbotron text-center\" *ngIf=\"user\">\n    <h1>TEAM View</h1>\n\n    <div class=\"layer1\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/profile']\">{{user.name}}</a>\n    </div>\n    <div class=\"layer2\">\n        <a class=\"btn btn-primary\" [routerLink]=\"['/addteam']\">Add New Team</a>\n    </div>\n\n    <div id=\"chart\">\n        <ul class=\"list-group\" *ngFor=\"let newTeam of teams;\">\n            <div class=\"list-element\" *ngFor=\"let team of newTeam;\">\n                <li class=\"list-group-item\">Team Name: {{team.teamName}}</li>\n                <li class=\"list-group-item\">Sprint Number: {{team.sprintNumber}}</li>\n                <li class=\"list-group-item\">Completed At: {{team.completedAt}}</li>\n                <li class=\"list-group-item\">Completed: {{team.completed}}</li>\n                <div class=\"graph\">\n                </div>\n                <br/><br/>\n            </div>\n        </ul>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -315,9 +315,8 @@ var DashboardComponent = (function () {
     function DashboardComponent(authService, router) {
         this.authService = authService;
         this.router = router;
-        this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
     }
-    DashboardComponent.prototype.ngOnInit = function () {
+    DashboardComponent.prototype.ngAfterContentInit = function () {
         var _this = this;
         this.authService.getProfile().subscribe(function (profile) {
             _this.user = profile.user;
@@ -326,114 +325,55 @@ var DashboardComponent = (function () {
             return false;
         });
         this.authService.getAllTeams().subscribe(function (teams) {
-            console.log(teams);
+            // console.log(teams);
             _this.teams = Object.keys(teams).map(function (key) { return teams[key]; });
-            console.log(_this.teams[0][1].spAchieved);
-            console.log(_this.teams);
-            var dataset = [_this.teams[0][0].spAchieved, _this.teams[0][0].spEstimated];
-            var w = 100;
-            var h = 100;
-            var barPadding = 1;
-            console.log(dataset[1]);
-            var svg = __WEBPACK_IMPORTED_MODULE_3_d3_selection__["a" /* select */]("body")
-                .append("svg")
-                .attr("width", w)
-                .attr("height", h);
-            svg.selectAll("rect")
-                .data(dataset)
-                .enter()
-                .append("rect")
-                .attr("x", function (d, i) { return i * (w / dataset.length); })
-                .attr("y", function (d) { return h - d; })
-                .attr("width", w / dataset.length - barPadding)
-                .attr("height", function (d) { return d; })
-                .attr("fill", function (d) { return "rgb(100, 0, " + (d * 5) + ")"; });
-            svg.selectAll("text")
-                .data(dataset)
-                .enter()
-                .append("text")
-                .text(function (d) { return d; })
-                .attr("x", function (d, i) { return i * (w / dataset.length) + 15; })
-                .attr("y", function (d) { return h - (d * 4) + 45; });
-            // const dataArray = [this.teams.spAchieved, this.teams.spEstimated];
-            // const widthScale = d3Scale.scaleLinear()
-            //     .domain([0, 100])
-            //     .range([0, 500]);
-            // // const color = d3Scale.scaleLinear()
-            // //     .domain([0, teams.spAchieved])
-            // //     .range();
-            // const axis = d3Axis.axisBottom(widthScale)
-            //     .ticks(5);
-            // const canvas = d3.select("li")
-            //     .append("svg")
-            //     .attr("width", 500)
-            //     .attr("height", 500)
-            //     .append("g")
-            //     .attr("transform", "translate(20, 0)");
-            // console.log(dataArray);
-            // console.log(this.teams.spAchieved);
-            // const bars = canvas.selectAll("rect")
-            //     .data(dataArray)
-            //     .enter()
-            //     .append("rect")
-            //     .attr("width", d => widthScale(d))
-            //     .attr("height", 50)
-            //     // .attr("fill", d => color(d))
-            //     .attr("y", (d, i) => i * 100);
-            // canvas.append("g")
-            //     .attr("transform", "translate(0, 400)")
-            //     .call(axis);
-            // console.log("I'm alive!");
-            // const initSvg = () => {     //
-            //     this.svg = d3.select("svg");
-            //     this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
-            //     this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
-            //     this.g = this.svg.append("g")
-            //         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-            // };
-            // const initAxis = () => {
-            //     this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
-            //     this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
-            //     this.x.domain(teams.map((d) => d.spAchieved));
-            //     this.y.domain([0, teams.spEstimated]);
-            // };
-            // const drawAxis = () => {
-            //     this.g.append("g")
-            //         .attr("class", "axis axis--x")
-            //         .attr("transform", "translate(0," + this.height + ")")
-            //         .call(d3Axis.axisBottom(this.x));
-            //     this.g.append("g")
-            //         .attr("class", "axis--y")
-            //         .call(d3Axis.axisLeft(this.y).ticks(10, " tasks"))
-            //         .append("text")
-            //         .attr("class", "axis-title")
-            //         .attr("transform", "rotate(-90)")
-            //         .attr("y", 6)
-            //         .attr("dy", "0.71em")
-            //         .attr("text-anchor", "end")
-            //         .text("Achieved");
-            // };
-            // const drawBars = () => {
-            //     this.g.selectAll(".bar")
-            //         .data(this.teams)
-            //         .enter().append("rect")
-            //         .attr("class", "bar")
-            //         .attr("x", d => this.x(d.teams.spAchieved))
-            //         .attr("y", d => this.y(d.teams.spEstimated))
-            //         .attr("width", this.x.bandwidth())
-            //         .attr("height", d => this.height - this.y(d.spEstimated));
-            // };
-            // initSvg()
-            // initAxis();
-            // drawAxis();
-            // drawBars();     //
+            // console.log(this.teams);
+        }, function (err) {
+            console.log(err);
+            return false;
+        });
+    };
+    DashboardComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.authService.getAllTeams().subscribe(function (teams) {
+            // console.log(this.teams);
+            var team = [];
+            team = _this.teams[0];
+            for (var i = 0; i < team.length; i++) {
+                var dataset = [];
+                dataset = [team[i].spAchieved, team[i].spEstimated];
+                // console.log(dataset);
+                var w = 100;
+                var h = 100;
+                var barPadding = 1;
+                var svg = __WEBPACK_IMPORTED_MODULE_3_d3_selection__["a" /* select */]("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+                svg.selectAll("rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                    .attr("x", function (d, i) { return i * (w / dataset.length); })
+                    .attr("y", function (d) { return h - d; })
+                    .attr("width", w / dataset.length - barPadding)
+                    .attr("height", function (d) { return d; })
+                    .attr("fill", function (d) { return "rgb(100, 0, " + (d * 5) + ")"; });
+                svg.selectAll("text")
+                    .data(dataset)
+                    .enter()
+                    .append("text")
+                    .text(function (d) { return d; })
+                    .attr("x", function (d, i) { return i * (w / dataset.length) + 15; })
+                    .attr("y", function (d) { return h - d; });
+            }
+            ;
         }, function (err) {
             console.log(err);
             return false;
         });
     };
     DashboardComponent = __decorate([
-        //
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-dashboard',
             template: __webpack_require__("../../../../../src/app/components/dashboard/dashboard.component.html"),

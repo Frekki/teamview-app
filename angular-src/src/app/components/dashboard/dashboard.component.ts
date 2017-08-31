@@ -2,7 +2,7 @@ import { Component, AfterViewInit, AfterContentInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from "@angular/router";
 
-import * as d3 from "d3-selection";   //
+import * as d3 from "d3-selection";
 
 @Component({
     selector: 'app-dashboard',
@@ -12,7 +12,6 @@ import * as d3 from "d3-selection";   //
 export class DashboardComponent implements AfterViewInit, AfterContentInit {
     user: Object;
     teams: any;
-    //teamName: Object;
 
     constructor(
         private authService: AuthService,
@@ -40,58 +39,43 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     }
 
     ngAfterViewInit() {
-        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-        //Add 'implements AfterViewInit' to the class.
-
         this.authService.getAllTeams().subscribe(teams => {
-            // console.log(teams);
-            this.teams = Object.keys(teams).map(key => teams[key]);
             // console.log(this.teams);
+            var team = [];
+            team = this.teams[0];
 
-            const canvas = () => {
-                this.teams = Object.keys(teams).map(key => teams[key]);
-                var team = [];
-                team = teams.teams;
+            for (var i = 0; i < team.length; i++) {
+                var dataset = [];
+                dataset = [team[i].spAchieved, team[i].spEstimated];
+                // console.log(dataset);
 
-                for (var i = 0; i < team.length; i++) {
-                    var dataset = [];
-                    dataset = [team[i].spAchieved, team[i].spEstimated];
-                    // dataset = 
-                    // console.log(dataset);
+                var w = 100;
+                var h = 100;
+                var barPadding = 1;
 
-                    var w = 100;
-                    var h = 100;
-                    var barPadding = 1;
+                var svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
 
-                    var j = 0;
-                    // var svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ")")
-                    // var svg = d3.select("li")
-                    // console.log("#chart .list-element:nth-child(" + (i +1) +") .graph");
-                        var svg = d3.select("#chart .list-element:nth-child(" + (i+1) +") .graph")     
-                        .append("svg")
-                        .attr("width", w)
-                        .attr("height", h);
+                svg.selectAll("rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                    .attr("x", (d, i) => i * (w / dataset.length))
+                    .attr("y", d => h - d)
+                    .attr("width", w / dataset.length - barPadding)
+                    .attr("height", d => d)
+                    .attr("fill", (d) => "rgb(100, 0, " + (d * 5) + ")");
 
-                    svg.selectAll("rect")
-                        .data(dataset)
-                        .enter()
-                        .append("rect")
-                        .attr("x", (d, i) => i * (w / dataset.length))
-                        .attr("y", d => h - d)
-                        .attr("width", w / dataset.length - barPadding)
-                        .attr("height", d => d)
-                        .attr("fill", (d) => "rgb(100, 0, " + (d * 5) + ")");
-
-                    svg.selectAll("text")
-                        .data(dataset)
-                        .enter()
-                        .append("text")
-                        .text(d => d)
-                        .attr("x", (d, i) => i * (w / dataset.length) + 15)
-                        .attr("y", d => h - d);
-                };
-            }
-            canvas();
+                svg.selectAll("text")
+                    .data(dataset)
+                    .enter()
+                    .append("text")
+                    .text(d => d)
+                    .attr("x", (d, i) => i * (w / dataset.length) + 15)
+                    .attr("y", d => h - d);
+            };
         },
             err => {
                 console.log(err);
