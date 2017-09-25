@@ -12,6 +12,8 @@ import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AddteamComponent } from './components/addteam/addteam.component';
+import { AddsprintComponent } from './components/addsprint/addsprint.component';
+
 
 import {ValidateService} from './services/validate.service';
 import {AuthService} from './services/auth.service';
@@ -24,7 +26,8 @@ const appRoutes: Routes =  [
   {path:'login', component: LoginComponent},
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path:'profile', component: ProfileComponent, canActivate: [AuthGuard]},
-  {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard]}
+  {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard]},
+  {path:'addsprint', component: AddsprintComponent, canActivate: [AuthGuard]}
 ]
 
 @NgModule({
@@ -36,7 +39,8 @@ const appRoutes: Routes =  [
     HomeComponent,
     DashboardComponent,
     ProfileComponent,
-    AddteamComponent
+    AddteamComponent,
+    AddsprintComponent
   ],
   imports: [
     BrowserModule,

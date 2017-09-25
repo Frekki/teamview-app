@@ -12,6 +12,7 @@ import * as d3 from "d3-selection";
 export class DashboardComponent implements AfterViewInit, AfterContentInit {
     user: Object;
     teams: any;
+    // sprints : any;
 
     constructor(
         private authService: AuthService,
@@ -41,11 +42,14 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     ngAfterViewInit() {
         this.authService.getAllTeams().subscribe(teams => {
             // console.log(this.teams);
-            var team = [];
+            let team = [];
             team = this.teams[0];
+            // let sprint = [];
+            // sprint = this.sprints[0];
 
             for (var i = 0; i < team.length; i++) {
                 var dataset = [];
+                // for(var j = 0; i< sprint.length; j++){
                 dataset = [team[i].spAchieved, team[i].spEstimated];
                 // console.log(dataset);
 
@@ -76,6 +80,7 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     .attr("x", (d, i) => i * (w / dataset.length) + 15)
                     .attr("y", d => h - d);
             };
+        // }
         },
             err => {
                 console.log(err);

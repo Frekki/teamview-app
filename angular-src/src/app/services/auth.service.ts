@@ -80,4 +80,12 @@ export class AuthService {
       return this.http.get('http://localhost:3000/teams/dashboard' || 'teams/dashboard',{headers: headers})
           .map((res) => res.json());
   }
+
+  //Sprints
+  addSprint(teamName){
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    return this.http.patch('http://localhost:3000/teams/addsprint' || 'teams/addsprint', teamName,{headers: headers})
+        .map(res => res.json());
+}
 }
