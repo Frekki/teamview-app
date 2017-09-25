@@ -10,10 +10,10 @@ const TeamSchema = mongoose.Schema({
         minlength: 1,
         trim: true
     },
-    sprintNumber: {
+    sprintNumber: [{
         type: Number,
         require: true
-    },
+    }],
     completedAt: {
         type: Date,
         default: null
@@ -22,14 +22,14 @@ const TeamSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    spAchieved: {
+    spAchieved: [{
         type: Number,
         required: true
-    },
-    spEstimated: {
+    }],
+    spEstimated: [{
         type: Number,
         required: true
-    }
+    }]
     // _creator: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     required: true
@@ -49,4 +49,8 @@ module.exports.getTeamByTeamname = (teamName, callback) => {
 
 module.exports.addTeam = (newTeam, callback) => {
     newTeam.save(callback);
+}
+
+module.exports.addSprint = (teamName, callback) => {
+    teamName.save(callback);
 }
