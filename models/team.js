@@ -10,9 +10,20 @@ const TeamSchema = mongoose.Schema({
         minlength: 1,
         trim: true
     },
-    sprintNumber: [{
-        type: Number,
-        require: true
+    sprint: [{
+        sprintNumber:{
+            type: Number
+        },        
+        
+        spAchieved: {
+            type: Number,
+            required: true
+        },
+        
+        spEstimated: {
+            type: Number,
+            required: true
+        }
     }],
     completedAt: {
         type: Date,
@@ -21,15 +32,7 @@ const TeamSchema = mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
-    },
-    spAchieved: [{
-        type: Number,
-        required: true
-    }],
-    spEstimated: [{
-        type: Number,
-        required: true
-    }]
+    }
     // _creator: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     required: true

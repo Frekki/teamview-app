@@ -10,19 +10,28 @@ const User = require('../models/user');
 router.post('/addteam', (req, res, next) => {
     let team = new Team({
         teamName: req.body.teamName,
-        sprintNumber: req.body.sprintNumber,
         completed: req.body.completed,
         completedAt: req.body.completedAt,
-        spAchieved: req.body.spAchieved,
-        spEstimated: req.body.spEstimated
+        sprint: [{
+            spAchieved: req.body.spAchieved,
+            spEstimated: req.body.spEstimated,
+            sprintNumber: req.body.sprintNumber = 1 
+        }]
         // _creator: req.user._id
     });
 
     Team.addTeam(team, (err, teams) => {
         if (err) {
-            res.json({ success: false, msg: 'Failed to create team' });
+            res.json({
+                success: false,
+                msg: 'Failed to create team'
+            });
+            console.log(err);
         } else {
-            res.json({ success: true, msg: 'Team created' });
+            res.json({
+                success: true,
+                msg: 'Team created',
+            });
         }
     });
 });
@@ -31,7 +40,7 @@ router.patch('/addsprint', (req, res, next) => {
     // Team.addSprint({
     //     $set: {
     //         teamName: Team.findOne(req.body.teamName),
-    //         sprintNumber: req.body.sprintNumber,
+            // sprintNumber: this.sprintNumber += 1,
     //         spEstimated: req.body.spEstimated,
     //         spAchieved: req.body.spAchieved
     //     }
@@ -47,22 +56,31 @@ router.patch('/addsprint', (req, res, next) => {
     //         res.status(400).send();
     //     });
     const teamName = req.body.teamName;
-    
+
     Team.getTeamByTeamname(teamName, (err, team) => {
         if (err) {
-            res.json({ success: false, msg: 'Failed to add sprint' });
+            res.json({
+                success: false,
+                msg: 'Failed to add sprint'
+            });
         } else {
             const query = {
                 sprintNumber: req.body.sprintNumber,
                 spEstimated: req.body.spEstimated,
                 spAchieved: req.body.spAchieved
             }
-            
+
             Team.addSprint(query, (err, team) => {
                 if (err) {
-                    res.json({ success: false, msg: 'Failed to create team' });
+                    res.json({
+                        success: false,
+                        msg: 'Failed to create team'
+                    });
                 } else {
-                    res.json({ success: true, msg: 'Team created' });
+                    res.json({
+                        success: true,
+                        msg: 'Team created'
+                    });
                 }
             });
         }
@@ -82,9 +100,13 @@ router.patch('/addsprint', (req, res, next) => {
     // });
 });
 
-router.get('/dashboard', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+router.get('/dashboard', passport.authenticate('jwt', {
+    session: false
+}), (req, res, next) => {
     Team.find({}).then(teams => {
-        res.send({ teams });
+        res.send({
+            teams
+        });
     });
 
 });
