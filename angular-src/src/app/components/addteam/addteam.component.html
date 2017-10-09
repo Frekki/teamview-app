@@ -5,10 +5,6 @@
     <input type="text" [(ngModel)]="teamName" name="teamName" class="form-control">
   </div>
   <div class="form-group">
-    <label>Sprint Number</label>
-    <input type="text" [(ngModel)]="sprintNumber" name="sprintNumber" class="form-control">
-  </div>
-  <div class="form-group">
     <label>Completed</label>
     <input type="checkbox" [(ngModel)]="completed" name="completed" class="form-control" >
   </div>
@@ -16,13 +12,17 @@
     <label>Completed At</label>
     <input type="date" [(ngModel)]="completedAt" name="completedAt" class="form-control" >
   </div>
-  <div class="form-group">
-    <label>SP Achieved</label>
-    <input type="text" [(ngModel)]="spAchieved" name="spAchieved" class="form-control">
-  </div>
+  <!-- <div class="form-group">
+    <label>Sprint Number</label>
+    <input type="text" [(ngModel)]="sprintNumber" name="sprintNumber" class="form-control">
+  </div> -->
   <div class="form-group">
     <label>SP Estimated</label>
     <input type="text" [(ngModel)]="spEstimated" name="spEstimated" class="form-control">
+  </div>
+  <div class="form-group">
+    <label>SP Achieved</label>
+    <input type="text" [(ngModel)]="spAchieved" name="spAchieved" class="form-control">
   </div>
   <input type="submit" class="btn btn-primary" value="Submit">
 </form>

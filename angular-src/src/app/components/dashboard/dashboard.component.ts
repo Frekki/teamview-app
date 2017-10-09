@@ -12,7 +12,8 @@ import * as d3 from "d3-selection";
 export class DashboardComponent implements AfterViewInit, AfterContentInit {
     user: Object;
     teams: any;
-    // sprints : any;
+    // { teamName: String, sprint: Array<number>, completedAt: Date, completed: Boolean};
+    sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
 
     constructor(
         private authService: AuthService,
@@ -30,6 +31,9 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
         this.authService.getAllTeams().subscribe(teams => {
             // console.log(teams);
+            // for(let i = 0; teams.length >= i; i++){
+            //     this.teams = teams[i];
+            // }
             this.teams = Object.keys(teams).map(key => teams[key]);
             // console.log(this.teams);
         },
@@ -40,47 +44,50 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     }
 
     ngAfterViewInit() {
-        this.authService.getAllTeams().subscribe(teams => {
-            // console.log(this.teams);
+        this.authService.getAllTeams().subscribe((teams: { xxxx: Number, spEstimated: Number, spAchieved: Number }) => {
+            // console.log(this.teams[0][4]);
             let team = [];
             team = this.teams[0];
-            // let sprint = [];
-            // sprint = this.sprints[0];
 
-            for (var i = 0; i < team.length; i++) {
-                var dataset = [];
-                // for(var j = 0; i< sprint.length; j++){
-                dataset = [team[i].spAchieved, team[i].spEstimated];
-                // console.log(dataset);
+            let sprint = [];
+            sprint = this.teams[0][0].sprint[0];
 
-                var w = 100;
-                var h = 100;
-                var barPadding = 1;
+            for (let i = 0; i < team.length; i++) {
+                let dataset = [];
+                // console.log(team.length);
 
-                var svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
-                    .append("svg")
-                    .attr("width", w)
-                    .attr("height", h);
+                for (let j = 0; j < team.length; j++) {
+                    dataset = [team[i].sprint[j].spAchieved, team[i].sprint[j].spEstimated];
+                    console.log(dataset);
 
-                svg.selectAll("rect")
-                    .data(dataset)
-                    .enter()
-                    .append("rect")
-                    .attr("x", (d, i) => i * (w / dataset.length))
-                    .attr("y", d => h - d)
-                    .attr("width", w / dataset.length - barPadding)
-                    .attr("height", d => d)
-                    .attr("fill", (d) => "rgb(100, 0, " + (d * 5) + ")");
+                    const w = 100;
+                    const h = 100;
+                    const barPadding = 1;
 
-                svg.selectAll("text")
-                    .data(dataset)
-                    .enter()
-                    .append("text")
-                    .text(d => d)
-                    .attr("x", (d, i) => i * (w / dataset.length) + 15)
-                    .attr("y", d => h - d);
-            };
-        // }
+                    const svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+
+                    svg.selectAll("rect")
+                        .data(dataset)
+                        .enter()
+                        .append("rect")
+                        .attr("x", (d, i) => i * (w / dataset.length))
+                        .attr("y", d => h - d)
+                        .attr("width", w / dataset.length - barPadding)
+                        .attr("height", d => d)
+                        .attr("fill", (d) => "rgb(100, 0, " + (d * 5) + ")");
+
+                    svg.selectAll("text")
+                        .data(dataset)
+                        .enter()
+                        .append("text")
+                        .text(d => d)
+                        .attr("x", (d, i) => i * (w / dataset.length) + 15)
+                        .attr("y", d => h - d);
+                }
+            }
         },
             err => {
                 console.log(err);

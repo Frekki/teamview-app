@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AddsprintComponent implements OnInit {
   teamName: String;
+  sprint: any;
   sprintNumber: Number;
   spAchieved: Number;
   spEstimated: Number;
@@ -28,9 +29,11 @@ export class AddsprintComponent implements OnInit {
   onAddingSubmit() {
     const team = {
       teamName: this.teamName,
-      sprintNumber: this.sprintNumber,
+      sprint: [{
+      // sprintNumber: this.sprintNumber,
       spAchieved: this.spAchieved,
       spEstimated: this.spEstimated
+      }]
     }
 
     // Required Fields

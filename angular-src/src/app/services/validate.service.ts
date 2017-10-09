@@ -14,7 +14,7 @@ export class ValidateService {
   }
 
   validateNewTeam(team){
-    if(team.teamName == undefined || team.sprintNumber == undefined || team.completedAt == undefined || team.completed == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
+    if(team.teamName == undefined ||  team.completedAt == undefined || team.completed == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
       return false;
     } else {
       return true;
@@ -22,11 +22,11 @@ export class ValidateService {
   }
 
   validateNewSprint(team){
-    if(team.teamName == undefined || team.sprintNumber == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
-      return false;
-    } else {
-      return true;
-    }
+    // if(team.teamName == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
+    //   return false;
+    // } else {
+    //   return true;
+    // }
   }
 
   validateEmail(email){
