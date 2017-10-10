@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const Team = require('../models/team');
 const User = require('../models/user');
+const {
+    ObjectID
+} = require('mongodb');
 
 // Add Team
 router.post('/addteam', (req, res, next) => {
@@ -15,7 +18,7 @@ router.post('/addteam', (req, res, next) => {
         sprint: [{
             spAchieved: req.body.spAchieved,
             spEstimated: req.body.spEstimated,
-            sprintNumber: req.body.sprintNumber = 1 
+            sprintNumber: req.body.sprintNumber = 1
         }]
         // _creator: req.user._id
     });
@@ -26,7 +29,6 @@ router.post('/addteam', (req, res, next) => {
                 success: false,
                 msg: 'Failed to create team'
             });
-            console.log(err);
         } else {
             res.json({
                 success: true,
@@ -36,68 +38,38 @@ router.post('/addteam', (req, res, next) => {
     });
 });
 
-router.patch('/addsprint', (req, res, next) => {
-    // Team.addSprint({
-    //     $set: {
-    //         teamName: Team.findOne(req.body.teamName),
-            // sprintNumber: this.sprintNumber += 1,
-    //         spEstimated: req.body.spEstimated,
-    //         spAchieved: req.body.spAchieved
-    //     }
-    //     }).then((team) => {
-    //         if (!team) {
-    //             return res.status(404).send();
-    //         }
-
-    //         res.send({
-    //             team
-    //         });
-    //     }).catch((e) => {
-    //         res.status(400).send();
-    //     });
+router.put('/addsprint/:id', (req, res, next) => {
+    const id = req.params.id;
+    // const body = req.body(['spEstimated', 'spAchieved']);
     const teamName = req.body.teamName;
 
-    Team.getTeamByTeamname(teamName, (err, team) => {
-        if (err) {
-            res.json({
-                success: false,
-                msg: 'Failed to add sprint'
-            });
-        } else {
-            const query = {
-                sprintNumber: req.body.sprintNumber,
-                spEstimated: req.body.spEstimated,
-                spAchieved: req.body.spAchieved
-            }
+    const team = Team.findById(id);
 
-            Team.addSprint(query, (err, team) => {
-                if (err) {
-                    res.json({
-                        success: false,
-                        msg: 'Failed to create team'
-                    });
-                } else {
-                    res.json({
-                        success: true,
-                        msg: 'Team created'
-                    });
-                }
-            });
+    if (!ObjectID.isValid(id))
+        return res.status(404).send();
+
+    Team.updateOne({
+        _id: ObjectID("59db7dd4c9030e154cafe011")
+    }, {
+        $setOnInsert: {
+            sprint: [{
+                spAchieved: req.body.spAchieved,
+                spEstimated: req.body.spEstimated
+            }]
         }
-    });
+    }, {
+        upsert: true
+    }).then((team) => {
+        if (!team) {
+            return res.status(404).send();
+        }
 
-    // Team.addSprint(teamName, (err, team) => {
-    //     if (err) {
-    //         res.json({ success: false, msg: 'Failed to add sprint' });
-    //     } else {
-    //         Team.collection('teams').findOneAndUpdate({
-    //             sprintNumber: req.body.sprintNumber,
-    //             spEstimated: req.body.spEstimated,
-    //             spAchieved: req.body.spAchieved
-    //         });
-    //         res.json({ success: true, msg: 'Sprint added' });
-    //     }
-    // });
+        res.send({
+            team
+        });
+    }).catch((e) => {
+        res.status(400).send();
+    });
 });
 
 router.get('/dashboard', passport.authenticate('jwt', {

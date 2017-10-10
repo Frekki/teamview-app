@@ -55,5 +55,6 @@ module.exports.addTeam = (newTeam, callback) => {
 }
 
 module.exports.addSprint = (teamName, callback) => {
-    teamName.save(callback);
+    teamName.findOneAndUpdate(teamName, callback);
+    // teamName.save(callback);
 }

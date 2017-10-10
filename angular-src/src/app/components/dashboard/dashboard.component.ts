@@ -44,21 +44,23 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     }
 
     ngAfterViewInit() {
-        this.authService.getAllTeams().subscribe((teams: { xxxx: Number, spEstimated: Number, spAchieved: Number }) => {
-            // console.log(this.teams[0][4]);
+        this.authService.getAllTeams().subscribe((teams: { teamName: String, sprint: Array<number>, completedAt: Date, completed: Boolean }) => {
             let team = [];
             team = this.teams[0];
 
-            let sprint = [];
-            sprint = this.teams[0][0].sprint[0];
-
             for (let i = 0; i < team.length; i++) {
+                let sTeam = team[i];
                 let dataset = [];
-                // console.log(team.length);
 
-                for (let j = 0; j < team.length; j++) {
-                    dataset = [team[i].sprint[j].spAchieved, team[i].sprint[j].spEstimated];
-                    console.log(dataset);
+                for (let j = 0; j < team[i].sprint.length; j++) {
+                    let sprint = [];
+                    sprint = [team[i].sprint[i]];
+
+                    dataset = [sTeam.sprint[j].spAchieved, sTeam.sprint[j].spEstimated];
+                    // console.log(dataset);
+
+                    if (sprint.length > 1)
+                    i--;
 
                     const w = 100;
                     const h = 100;

@@ -22,11 +22,11 @@ export class ValidateService {
   }
 
   validateNewSprint(team){
-    // if(team.teamName == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
-    //   return false;
-    // } else {
-    //   return true;
-    // }
+    if(team.teamName == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
+      return false;
+    } else {
+      return true;
+    }
   }
 
   validateEmail(email){
