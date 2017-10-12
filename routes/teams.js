@@ -49,13 +49,14 @@ router.put('/addsprint/:id', (req, res, next) => {
         return res.status(404).send();
 
     Team.updateOne({
-        _id: ObjectID("59db7dd4c9030e154cafe011")
+        _id: id
     }, {
-        $setOnInsert: {
-            sprint: [{
+        $push: {
+            sprint: {
                 spAchieved: req.body.spAchieved,
-                spEstimated: req.body.spEstimated
-            }]
+                spEstimated: req.body.spEstimated,
+                sprintNumber: req.body.sprintNumber
+            }
         }
     }, {
         upsert: true

@@ -2,7 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+// import { MaterialModule } from '@angular/material';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -15,9 +17,9 @@ import { AddteamComponent } from './components/addteam/addteam.component';
 import { AddsprintComponent } from './components/addsprint/addsprint.component';
 
 
-import {ValidateService} from './services/validate.service';
-import {AuthService} from './services/auth.service';
-import {FlashMessagesModule} from 'angular2-flash-messages';
+import { ValidateService } from './services/validate.service';
+import { AuthService } from './services/auth.service';
+import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from "./guards/auth.guard";
 
 const appRoutes: Routes =  [
@@ -48,6 +50,8 @@ const appRoutes: Routes =  [
     HttpModule,
     RouterModule.forRoot(appRoutes),
     FlashMessagesModule
+    // MaterialModule,
+    // BrowserAnimationsModule
   ],
   providers: [ValidateService, AuthService, AuthGuard],
   bootstrap: [AppComponent]

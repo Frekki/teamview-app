@@ -22,7 +22,7 @@ export class ValidateService {
   }
 
   validateNewSprint(team){
-    if(team.teamName == undefined || team.spAchieved == undefined || team.spEstimated == undefined){
+    if(team.spAchieved == undefined || team.spEstimated == undefined || team.sprintNumber == undefined){
       return false;
     } else {
       return true;

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, AfterContentInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 import * as d3 from "d3-selection";
 
