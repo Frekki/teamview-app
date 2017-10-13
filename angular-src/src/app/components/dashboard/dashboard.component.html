@@ -19,7 +19,7 @@
                     <!-- <button id="teamId" class="layer3 btn btn-primary" (click)="getId()">Add Sprint</button> -->
                     <!-- <input type="submit" id="getId" class="layer3 btn btn-primary" value="Add sprint"> -->
                     <div class="container">
-                        <button type="button" class="layer3 btn btn-primary" (click)="openForm()">Add Sprint</button>
+                        <a type="button" class="layer3 btn btn-primary" (click)="openForm()" [routerLink]="['/dashboard', team._id]">Add Sprint</a>
                         <div [hidden]="submitted">
                             <button type="button" class="layer3 btn btn-primary" (click)="closeForm()">Close</button>
                             <h2>Add Sprint</h2>

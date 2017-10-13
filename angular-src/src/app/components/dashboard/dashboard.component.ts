@@ -54,8 +54,7 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
         };
 
         // const id = this.teams._id;
-
-        // this.router.navigate(['./dashboard/' + id]);
+        // console.log(id);
 
         this.authService.getId();
         this.authService.addSprint(sprint).subscribe(data => {

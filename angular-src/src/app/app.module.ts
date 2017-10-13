@@ -25,6 +25,7 @@ const appRoutes: Routes =  [
   {path:'register', component: RegisterComponent},
   {path:'login', component: LoginComponent},
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+  {path:'dashboard/:id', component: DashboardComponent, canActivate: [AuthGuard]},
   {path:'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path:'addteam', component: AddteamComponent, canActivate: [AuthGuard]},
   {path:'addsprint', component: AddsprintComponent, canActivate: [AuthGuard]}

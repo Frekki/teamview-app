@@ -38,7 +38,7 @@ router.post('/addteam', (req, res, next) => {
     });
 });
 
-router.put('/addsprint/:id', (req, res, next) => {
+router.put('/dashboard/:id', (req, res, next) => {
     const id = req.params.id;
     // const body = req.body(['spEstimated', 'spAchieved']);
     const teamName = req.body.teamName;
