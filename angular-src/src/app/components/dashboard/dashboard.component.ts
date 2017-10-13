@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, AfterContentInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
 
 import * as d3 from "d3-selection";
@@ -22,40 +23,54 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
 
     constructor(
+        private flashMessage: FlashMessagesService,
         private authService: AuthService,
-        private router: Router,
+        private router: Router
     ) { }
 
-    model = new Sprint (
+    model = new Sprint(
         this.spEstimated,
         this.spAchieved,
         this.sprintNumber
-    )
-    
+    );
 
     submitted = true;
 
-    openForm() { this.submitted = false; }
-    closeForm() { this.submitted = true; }    
-    onSubmit() {  }
+    openForm() {
+        // let id = event.target || event.srcElement || event.currentTarget;
+        // let id = target.attribute.id;
+        // let value = id.nodeValue;
+        this.submitted = false;
+    }
+    closeForm() { this.submitted = true; }
 
-    addSprint() {
+    onSubmit() {
         this.submitted = true;
-        
+
         const sprint = {
             spEstimated: this.spEstimated,
             spAchieved: this.spAchieved,
             sprintNumber: this.sprintNumber
-        }
+        };
+
+        // const id = this.teams._id;
+
+        // this.router.navigate(['./dashboard/' + id]);
 
         this.authService.getId();
-        this.authService.addSprint(sprint);
-
-        
+        this.authService.addSprint(sprint).subscribe(data => {
+            // let id = this.teams._id;
+            if (data.success) {
+                this.flashMessage.show('You add new team', { cssClass: 'alert-success', timeout: 3000 });
+                this.router.navigate(['/dashboard']);
+            } else {
+                this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
+            }
+        })
     }
 
     ngAfterContentInit() {
-         this.authService.getProfile().subscribe(profile => {
+        this.authService.getProfile().subscribe(profile => {
             this.user = profile.user;
         },
             err => {
@@ -71,10 +86,10 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                 return false;
             });
 
-             // this.authService.getId().subscribe(team => {})    
-    //    this.authService.addSprint(sprint).subscribe(sprint => {
-    //        let team = this.teamId;
-    //    });
+        // this.authService.getId().subscribe(team => {})    
+        //    this.authService.addSprint(sprint).subscribe(sprint => {
+        //        let team = this.teamId;
+        //    });
     }
 
     ngAfterViewInit() {

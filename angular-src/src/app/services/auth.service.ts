@@ -92,7 +92,7 @@ export class AuthService {
   addSprint(sprint) {
     let headers = new Headers();
     // headers.append('id', this.teamId);
-    headers.append('Content-Type', 'application/json');
+    // headers.append('Content-Type', 'application/json');
     return this.http.put('http://localhost:3000/teams/dashboard/:id' || 'teams/dashboard/:id', sprint, { headers: headers })
       .map((res) => res.json());
   }
