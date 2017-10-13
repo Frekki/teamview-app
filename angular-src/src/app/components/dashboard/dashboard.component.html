@@ -14,19 +14,45 @@
     <div id="chart">
         <ul class="list-group" *ngFor="let newTeam of teams; let spr of sprint;">
             <div class="list-element" *ngFor="let team of newTeam; let i=index;">
+
                 <li class="list-group-item">Team Name: {{team.teamName}}
-                    <a class="layer3 btn btn-primary" (click)="addSprint($i)">Add Sprint
-                        <input class="hidden" type="number" name="spEstimated">
-                        <input class="hidden" type="number" name="spAchieved">
-                        <input class="hidden" type="number" name="sprintNumber">
-                    </a>
+
+                    <!-- <button id="teamId" class="layer3 btn btn-primary" (click)="getId()">Add Sprint</button> -->
+                    <!-- <input type="submit" id="getId" class="layer3 btn btn-primary" value="Add sprint"> -->
+                    <div class="container">
+                        <button type="button" class="layer3 btn btn-primary" (click)="openForm()">Add Sprint</button>
+                        <div [hidden]="submitted">
+                            <button type="button" class="layer3 btn btn-primary" (click)="closeForm()">Add Sprint</button>
+                            <h2>Add Sprint</h2>
+                            <form (ngSubmit)="addSprint()" #sprintForm="ngForm">
+                                <div class="form-group">
+                                    <label>SP Estimated</label>
+                                    <input type="text" [(ngModel)]="spr.spEstimated" name="spEstimated" class="form-control" #spEstimated="ngModel" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>SP Achieved</label>
+                                    <input type="text" [(ngModel)]="spr.spAchieved" name="spAchieved" class="form-control" #spAchieved="ngModel" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sprint Number</label>
+                                    <input type="text" [(ngModel)]="spr.spintNumber" name="spintNumber" class="form-control" #sprintNumber="ngModel" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-success" value="Add sprint">Add Sprint</button>
+                                <button type="button" class="btn btn-primary btn-success" (click)="sprintForm.reset()">Reset</button>
+                            </form>
+                        </div>
+                    </div>
+
                 </li>
+
                 <li class="list-group-item">Completed At: {{team.completedAt}}</li>
                 <li class="list-group-item">Completed: {{team.completed}}</li>
                 <li class="list-group-item">Sprint Number: {{i+1}}</li>
                 <div class="graph">
                 </div>
-                <br/><br/>
+
+                <br/>
+                <br/>
             </div>
         </ul>
     </div>

@@ -40,15 +40,15 @@ export class AddsprintComponent implements OnInit {
     }
 
     // Register sprint
-    this.authService.addSprint(team.teamName).subscribe(data => {
-      if (data.success) {
-        this.flashMessage.show('You add new sprint to ' + team.teamName + ' team.', { cssClass: 'alert-success', timeout: 3000 });
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
-        this.router.navigate(['/addsprint']);
-      }
-    })
+    // this.authService.addSprint(team.teamName).subscribe(data => {
+      // if (data.success) {
+      //   this.flashMessage.show('You add new sprint to ' + team.teamName + ' team.', { cssClass: 'alert-success', timeout: 3000 });
+      //   this.router.navigate(['/dashboard']);
+      // } else {
+      //   this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
+      //   this.router.navigate(['/addsprint']);
+      // }
+    // })
   }
 
 }

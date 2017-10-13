@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 
 import * as d3 from "d3-selection";
 
+import { Sprint } from './sprint';
+
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
@@ -12,16 +14,48 @@ import * as d3 from "d3-selection";
 export class DashboardComponent implements AfterViewInit, AfterContentInit {
     user: Object;
     teams: any;
+    teamId: any;
+    sprintNumber: Number;
+    spEstimated: Number;
+    spAchieved: Number;
     // { teamName: String, sprint: Array<number>, completedAt: Date, completed: Boolean};
     sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
 
     constructor(
         private authService: AuthService,
-        private router: Router
+        private router: Router,
     ) { }
 
+    model = new Sprint (
+        this.spEstimated,
+        this.spAchieved,
+        this.sprintNumber
+    )
+    
+
+    submitted = true;
+
+    openForm() { this.submitted = false; }
+    closeForm() { this.submitted = true; }    
+    onSubmit() {  }
+
+    addSprint() {
+        this.submitted = true;
+        
+        const sprint = {
+            spEstimated: this.spEstimated,
+            spAchieved: this.spAchieved,
+            sprintNumber: this.sprintNumber
+        }
+
+        this.authService.getId();
+        this.authService.addSprint(sprint);
+
+        
+    }
+
     ngAfterContentInit() {
-        this.authService.getProfile().subscribe(profile => {
+         this.authService.getProfile().subscribe(profile => {
             this.user = profile.user;
         },
             err => {
@@ -30,17 +64,17 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
             });
 
         this.authService.getAllTeams().subscribe(teams => {
-            // console.log(teams);
-            // for(let i = 0; teams.length >= i; i++){
-            //     this.teams = teams[i];
-            // }
             this.teams = Object.keys(teams).map(key => teams[key]);
-            // console.log(this.teams);
         },
             err => {
                 console.log(err);
                 return false;
             });
+
+             // this.authService.getId().subscribe(team => {})    
+    //    this.authService.addSprint(sprint).subscribe(sprint => {
+    //        let team = this.teamId;
+    //    });
     }
 
     ngAfterViewInit() {
@@ -57,10 +91,9 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     sprint = [team[i].sprint[i]];
 
                     dataset = [sTeam.sprint[j].spAchieved, sTeam.sprint[j].spEstimated];
-                    // console.log(dataset);
 
                     if (sprint.length > 1)
-                    i--;
+                        i--;
 
                     const w = 100;
                     const h = 100;
