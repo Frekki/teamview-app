@@ -7,23 +7,18 @@
     <div class="layer2">
         <a class="btn btn-primary" [routerLink]="['/addteam']">Add New Team</a>
     </div>
-    <!-- <div class="layer3">
-        <a class="btn btn-primary" [routerLink]="['/addsprint']">Add Sprint</a>
-    </div> -->
 
     <div id="chart">
-        <ul class="list-group" *ngFor="let newTeam of teams; let spr of sprint;">
+        <ul class="list-group" *ngFor="let newTeam of teams; let sprN of sprintsNumbers;">
             <div class="list-element" *ngFor="let team of newTeam; let i=index;">
-                <li class="list-group-item">Team Name: {{team.teamName}}
 
-                    <!-- <button id="teamId" class="layer3 btn btn-primary" (click)="getId()">Add Sprint</button> -->
-                    <!-- <input type="submit" id="getId" class="layer3 btn btn-primary" value="Add sprint"> -->
+                <li class="list-group-item">Team Name: {{team.teamName}}
                     <div class="container">
-                        <a type="button" class="layer3 btn btn-primary" (click)="openForm()" [routerLink]="['/dashboard', team._id]">Add Sprint</a>
+                        <a type="button" class="layer3 btn btn-primary" (click)="openForm(team)">Add Sprint</a>
                         <div [hidden]="submitted">
-                            <button type="button" class="layer3 btn btn-primary" (click)="closeForm()">Close</button>
+                            <button type="button" class="layer3 btn btn-primary" (click)="closeForm(team)">Close</button>
                             <h2>Add Sprint</h2>
-                            <form (ngSubmit)="onSubmit(id.value)" #sprintForm="ngForm">
+                            <form (ngSubmit)="onSubmit(id.value)" id="team._id" *ngIf="team.showForm" #sprintForm="ngForm">
                                 <div class="form-group">
                                     <label>SP Estimated</label>
                                     <input type="text" [(ngModel)]="spEstimated" name="spEstimated" class="form-control" required>
@@ -37,22 +32,20 @@
                                     <input type="text" [(ngModel)]="sprintNumber" name="spintNumber" class="form-control" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-success" value="Add sprint">Add Sprint</button>
-                                <button type="button" class="btn btn-primary btn-success" (click)="sprintForm.reset()">Reset</button>
+                                <button type="button" class="btn btn-primary btn-success" (click)="sprintForm.reset()" [routerLink]="['/dashboard']">Reset</button>
                             </form>
                         </div>
                     </div>
-
                 </li>
 
                 <li class="list-group-item">Completed At: {{team.completedAt}}</li>
                 <li class="list-group-item">Completed: {{team.completed}}</li>
-                <li class="list-group-item">Sprint Number: {{i+1}}</li>
-                <div [hidden]="" #id>
+                <!-- <li class="list-group-item">Sprint Number: {{sprN}}</li> -->
+                <div [hidden]="true" #id>
                     <li>{{team._id}}</li>
                 </div>
                 <div class="graph">
                 </div>
-
                 <br/>
                 <br/>
             </div>

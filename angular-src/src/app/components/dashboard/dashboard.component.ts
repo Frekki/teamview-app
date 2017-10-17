@@ -1,11 +1,12 @@
 import { Component, AfterViewInit, AfterContentInit } from '@angular/core';
+import { ValidateService } from '../../services/validate.service';
 import { AuthService } from '../../services/auth.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
 
 import * as d3 from "d3-selection";
+// import { scaleLinear } from "d3-scale";
 
-import { Sprint } from './sprint';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,26 +24,25 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
 
     constructor(
+        private validateService: ValidateService,
         private flashMessage: FlashMessagesService,
         private authService: AuthService,
         private router: Router
     ) { }
 
-    model = new Sprint(
-        this.spEstimated,
-        this.spAchieved,
-        this.sprintNumber
-    );
 
     submitted = true;
 
-    openForm() {
-        // let id = event.target || event.srcElement || event.currentTarget;
-        // let id = target.attribute.id;
-        // let value = id.nodeValue;
+    openForm(team: any) {
+        this.teamId = <string>team._id;
+        team.showForm = true;
         this.submitted = false;
     }
-    closeForm() { this.submitted = true; }
+
+    closeForm(team: any) {
+        team.showForm = false;
+        this.submitted = true;
+    }
 
     onSubmit() {
         this.submitted = true;
@@ -53,15 +53,15 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
             sprintNumber: this.sprintNumber
         };
 
-        // const id = this.teams._id;
-        // console.log(id);
+        if (!this.validateService.validateNewSprint(sprint)) {
+            this.flashMessage.show('Please fill in all fields', { cssClass: 'alert-danger', timeout: 3000 });
+            return false;
+        }
 
-        this.authService.getId();
-        this.authService.addSprint(sprint).subscribe(data => {
-            // let id = this.teams._id;
-            if (data.success) {
-                this.flashMessage.show('You add new team', { cssClass: 'alert-success', timeout: 3000 });
-                this.router.navigate(['/dashboard']);
+        this.authService.addSprint(this.teamId, sprint).subscribe(data => {
+            if (data) {
+                this.flashMessage.show('You add new sprint', { cssClass: 'alert-success', timeout: 3000 });
+                location.reload();
             } else {
                 this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
             }
@@ -79,16 +79,12 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
         this.authService.getAllTeams().subscribe(teams => {
             this.teams = Object.keys(teams).map(key => teams[key]);
+            // this.sprintNumber = this.teams.sprint.sprintNumber;
         },
             err => {
                 console.log(err);
                 return false;
             });
-
-        // this.authService.getId().subscribe(team => {})    
-        //    this.authService.addSprint(sprint).subscribe(sprint => {
-        //        let team = this.teamId;
-        //    });
     }
 
     ngAfterViewInit() {
@@ -104,7 +100,13 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     let sprint = [];
                     sprint = [team[i].sprint[i]];
 
-                    dataset = [sTeam.sprint[j].spAchieved, sTeam.sprint[j].spEstimated];
+                    let sprintsNumbers = [];
+                    sprintsNumbers = [sTeam.sprint[j].sprintNumber];
+                    // this.sprintNumber = sprintsNumbers;
+                    console.log(sprintsNumbers);
+
+                    dataset = [sTeam.sprint[j].spEstimated, sTeam.sprint[j].spAchieved];
+                    dataset.sort();
 
                     if (sprint.length > 1)
                         i--;
@@ -113,10 +115,27 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     const h = 100;
                     const barPadding = 1;
 
+                    // const x = d3.scaleLinear()
+                    //     .rangeRound([0, w]);
+
+                    // const y = d3.scaleLinear()
+                    //     .rangeRound([0, h]);
+
                     const svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
                         .append("svg")
                         .attr("width", w)
                         .attr("height", h);
+
+                    // svg.append("svg")
+                    //     .attr("class", "axis axis--s")
+                    //     .attr("transform", "translate(0," + h + ")")
+                    //     .call(d3.axisBottom(x));
+
+                        // svg.append("svg")
+                        // .attr("class", "axis axis--s")
+                        // .attr("transform", "translate(0," + w + ")")
+                        // .call(d3.axisBottom(y));
+
 
                     svg.selectAll("rect")
                         .data(dataset)
@@ -126,15 +145,25 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                         .attr("y", d => h - d)
                         .attr("width", w / dataset.length - barPadding)
                         .attr("height", d => d)
-                        .attr("fill", (d) => "rgb(100, 0, " + (d * 5) + ")");
+                        .attr("fill", (d) => "rgb(100, 0, " + (d * 4) + ")");
 
-                    svg.selectAll("text")
+                    svg.selectAll("text.value")
                         .data(dataset)
                         .enter()
                         .append("text")
                         .text(d => d)
                         .attr("x", (d, i) => i * (w / dataset.length) + 15)
                         .attr("y", d => h - d);
+
+                    svg.selectAll("text.title")
+                        .data(sprintsNumbers)
+                        .enter()
+                        .append("text")
+                        .text(d => d)
+                        .style("font-size", "34px")
+                        .style("color", "black")
+                        .attr("x", (d, i) => i * (w / dataset.length) + 40)
+                        .attr("y", 90);
                 }
             }
         },

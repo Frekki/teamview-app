@@ -83,17 +83,11 @@ export class AuthService {
       .map((res) => res.json());
   }
 
-  //Sprints
-  getId() {
-    const id = localStorage.setItem('teamId', this.teamId);
-    this.teamId = id;
-  }
-
-  addSprint(sprint) {
+  // Sprints
+  addSprint(id, sprint) {
     let headers = new Headers();
-    // headers.append('id', this.teamId);
-    // headers.append('Content-Type', 'application/json');
-    return this.http.put('http://localhost:3000/teams/dashboard/:id' || 'teams/dashboard/:id', sprint, { headers: headers })
-      .map((res) => res.json());
+    headers.append('Content-Type', 'application/json');
+    return this.http.put('http://localhost:3000/teams/dashboard/' + id || 'teams/dashboard/' + id, sprint, { headers: headers })
+      .map(res => res.json());
   }
 }

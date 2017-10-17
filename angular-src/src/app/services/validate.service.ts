@@ -21,8 +21,8 @@ export class ValidateService {
     }
   }
 
-  validateNewSprint(team){
-    if(team.spAchieved == undefined || team.spEstimated == undefined || team.sprintNumber == undefined){
+  validateNewSprint(sprint){
+    if(sprint.spAchieved == undefined || sprint.spEstimated == undefined || sprint.sprintNumber == undefined || sprint.spAchieved > sprint.spEstimated){
       return false;
     } else {
       return true;
