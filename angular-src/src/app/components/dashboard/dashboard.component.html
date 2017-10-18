@@ -21,15 +21,15 @@
                             <form (ngSubmit)="onSubmit(id.value)" id="team._id" *ngIf="team.showForm" #sprintForm="ngForm">
                                 <div class="form-group">
                                     <label>SP Estimated</label>
-                                    <input type="text" [(ngModel)]="spEstimated" name="spEstimated" class="form-control" required>
+                                    <input type="number" [(ngModel)]="spEstimated" name="spEstimated" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label>SP Achieved</label>
-                                    <input type="text" [(ngModel)]="spAchieved" name="spAchieved" class="form-control" required>
+                                    <input type="number" [(ngModel)]="spAchieved" name="spAchieved" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Sprint Number</label>
-                                    <input type="text" [(ngModel)]="sprintNumber" name="spintNumber" class="form-control" required>
+                                    <input type="number" [(ngModel)]="sprintNumber" name="spintNumber" class="form-control" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-success" value="Add sprint">Add Sprint</button>
                                 <button type="button" class="btn btn-primary btn-success" (click)="sprintForm.reset()" [routerLink]="['/dashboard']">Reset</button>

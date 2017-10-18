@@ -4,8 +4,10 @@ import { AuthService } from '../../services/auth.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
 
-import * as d3 from "d3-selection";
-// import { scaleLinear } from "d3-scale";
+import * as d3selection from "d3-selection";
+import * as d3scale from "d3-scale";
+import * as d3axis from "d3-axis";
+import * as d3array from "d3-array"
 
 
 @Component({
@@ -79,7 +81,6 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
         this.authService.getAllTeams().subscribe(teams => {
             this.teams = Object.keys(teams).map(key => teams[key]);
-            // this.sprintNumber = this.teams.sprint.sprintNumber;
         },
             err => {
                 console.log(err);
@@ -102,8 +103,6 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
                     let sprintsNumbers = [];
                     sprintsNumbers = [sTeam.sprint[j].sprintNumber];
-                    // this.sprintNumber = sprintsNumbers;
-                    console.log(sprintsNumbers);
 
                     dataset = [sTeam.sprint[j].spEstimated, sTeam.sprint[j].spAchieved];
                     dataset.sort();
@@ -112,40 +111,33 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                         i--;
 
                     const w = 100;
-                    const h = 100;
+                    const h = 125;
                     const barPadding = 1;
 
-                    // const x = d3.scaleLinear()
-                    //     .rangeRound([0, w]);
+                    const x = d3scale.scaleLinear()
+                        .domain([(d3array.min(sprintsNumbers)), (d3array.max(sprintsNumbers))])
+                        .rangeRound([(d3array.min(sprintsNumbers)), (d3array.max(sprintsNumbers))]);
 
-                    // const y = d3.scaleLinear()
-                    //     .rangeRound([0, h]);
-
-                    const svg = d3.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
+                    const svg = d3selection.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
                         .append("svg")
                         .attr("width", w)
                         .attr("height", h);
 
-                    // svg.append("svg")
-                    //     .attr("class", "axis axis--s")
-                    //     .attr("transform", "translate(0," + h + ")")
-                    //     .call(d3.axisBottom(x));
-
-                        // svg.append("svg")
-                        // .attr("class", "axis axis--s")
-                        // .attr("transform", "translate(0," + w + ")")
-                        // .call(d3.axisBottom(y));
-
+                    svg.append("svg")
+                        .style("font-size", "18px")
+                        .attr("x", w / 2 - 4)
+                        .attr("y", 100)
+                        .call(d3axis.axisBottom(x));
 
                     svg.selectAll("rect")
                         .data(dataset)
                         .enter()
                         .append("rect")
                         .attr("x", (d, i) => i * (w / dataset.length))
-                        .attr("y", d => h - d)
+                        .attr("y", d => h - d - 25)
                         .attr("width", w / dataset.length - barPadding)
                         .attr("height", d => d)
-                        .attr("fill", (d) => "rgb(100, 0, " + (d * 4) + ")");
+                        .attr("fill", (d) => "rgb(120, 30, " + (d * 4) + ")");
 
                     svg.selectAll("text.value")
                         .data(dataset)
@@ -153,17 +145,22 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                         .append("text")
                         .text(d => d)
                         .attr("x", (d, i) => i * (w / dataset.length) + 15)
-                        .attr("y", d => h - d);
+                        .attr("y", d => h - d - 25);
 
-                    svg.selectAll("text.title")
-                        .data(sprintsNumbers)
-                        .enter()
-                        .append("text")
-                        .text(d => d)
-                        .style("font-size", "34px")
-                        .style("color", "black")
-                        .attr("x", (d, i) => i * (w / dataset.length) + 40)
-                        .attr("y", 90);
+                    // if (sTeam.sprint[i].length > 1) {
+                    //     svg.selectAll("rect")
+                    //         .attr("width", w / dataset.length - 6);
+                    // }
+
+                    // svg.selectAll("text.title")
+                    //     .data(sprintsNumbers)
+                    //     .enter()
+                    //     .append("text")
+                    //     .text(d => d)
+                    //     .style("font-size", "34px")
+                    //     .style("color", "black")
+                    //     .attr("x", (d, i) => i * (w / dataset.length) + 40)
+                    //     .attr("y", 90);
                 }
             }
         },
