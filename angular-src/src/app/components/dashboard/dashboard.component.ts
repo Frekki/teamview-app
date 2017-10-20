@@ -81,6 +81,7 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
         this.authService.getAllTeams().subscribe(teams => {
             this.teams = Object.keys(teams).map(key => teams[key]);
+            this.sprint = this.teams.sprint;
         },
             err => {
                 console.log(err);
@@ -105,13 +106,13 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     sprintsNumbers = [sTeam.sprint[j].sprintNumber];
 
                     dataset = [sTeam.sprint[j].spEstimated, sTeam.sprint[j].spAchieved];
-                    dataset.sort();
 
                     if (sprint.length > 1)
                         i--;
 
-                    const w = 100;
-                    const h = 125;
+                    const width = dataset.length * 60;
+                    const height = 150;
+                    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
                     const barPadding = 1;
 
                     const x = d3scale.scaleLinear()
@@ -120,47 +121,43 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
                     const svg = d3selection.select("#chart .list-element:nth-child(" + (i + 1) + ") .graph")
                         .append("svg")
-                        .attr("width", w)
-                        .attr("height", h);
-
-                    svg.append("svg")
-                        .style("font-size", "18px")
-                        .attr("x", w / 2 - 4)
-                        .attr("y", 100)
-                        .call(d3axis.axisBottom(x));
+                        .attr("width", width)
+                        .attr("height", height);
 
                     svg.selectAll("rect")
                         .data(dataset)
                         .enter()
                         .append("rect")
-                        .attr("x", (d, i) => i * (w / dataset.length))
-                        .attr("y", d => h - d - 25)
-                        .attr("width", w / dataset.length - barPadding)
-                        .attr("height", d => d)
-                        .attr("fill", (d) => "rgb(120, 30, " + (d * 4) + ")");
+                        .attr("x", (d, i) => i * (width / dataset.length) - 35)
+                        .attr("y", d => height - d - 25)
+                        .attr("width", width / dataset.length - barPadding)
+                        .attr("height", d => d + 15)
+                        .attr("transform", "translate(" + (margin.left + 5) + "," + (margin.top - 35) + ")")
+                        .attr("fill", (d, i) => dataset[i] == dataset[0] && dataset[i] != dataset[1] ? "rgb(0, 128, 192)" : "rgb(255, 128, 0)");
+
+                    svg.append("svg")
+                        .style("font-size", "18px")
+                        .attr("x", width / 2 + 5)
+                        .attr("y", height - 22)
+                        .call(d3axis.axisBottom(x));
 
                     svg.selectAll("text.value")
                         .data(dataset)
                         .enter()
                         .append("text")
-                        .text(d => d)
-                        .attr("x", (d, i) => i * (w / dataset.length) + 15)
-                        .attr("y", d => h - d - 25);
-
-                    // if (sTeam.sprint[i].length > 1) {
-                    //     svg.selectAll("rect")
-                    //         .attr("width", w / dataset.length - 6);
-                    // }
+                        .text((d, i) => dataset[i] == dataset[0] ? d + "E" : d + "A")
+                        .attr("x", (d, i) => i * (width / dataset.length) + 25)
+                        .attr("y", d => height - d - 26);
 
                     // svg.selectAll("text.title")
-                    //     .data(sprintsNumbers)
+                    //     .data(dataset)
                     //     .enter()
                     //     .append("text")
-                    //     .text(d => d)
-                    //     .style("font-size", "34px")
-                    //     .style("color", "black")
-                    //     .attr("x", (d, i) => i * (w / dataset.length) + 40)
-                    //     .attr("y", 90);
+                    //     .text((d, i) => dataset[i] == dataset[0] ? "E" : "A")
+                    //     .text((d, i) => dataset[i] == dataset[0] ? "E" : "A")                        
+                    //     .style("font-size", "14px")
+                    //     .attr("x", (d, i) => i * (width / dataset.length) + 40)
+                    //     .attr("y", 120);
                 }
             }
         },
