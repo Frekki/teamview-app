@@ -38,9 +38,8 @@
                     </div>
                 </li>
 
-                <li class="list-group-item">Completed At: {{team.completedAt}}</li>
+                <li class="list-group-item">Completed At: {{team.completedAt.split("T00:00:00.000Z")}}</li>
                 <li class="list-group-item">Completed: {{team.completed}}</li>
-                <!-- <li class="list-group-item">Sprint Number: {{sprN}}</li> -->
                 <div [hidden]="true" #id>
                     <li>{{team._id}}</li>
                 </div>

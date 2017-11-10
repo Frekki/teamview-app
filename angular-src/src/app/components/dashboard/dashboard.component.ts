@@ -22,7 +22,6 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
     sprintNumber: Number;
     spEstimated: Number;
     spAchieved: Number;
-    // { teamName: String, sprint: Array<number>, completedAt: Date, completed: Boolean};
     sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
 
     constructor(
@@ -34,6 +33,7 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
 
 
     submitted = true;
+    private flag: boolean = true;
 
     openForm(team: any) {
         this.teamId = <string>team._id;
@@ -115,6 +115,8 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
                     const barPadding = 1;
 
+
+
                     const x = d3scale.scaleLinear()
                         .domain([(d3array.min(sprintsNumbers)), (d3array.max(sprintsNumbers))])
                         .rangeRound([(d3array.min(sprintsNumbers)), (d3array.max(sprintsNumbers))]);
@@ -133,7 +135,15 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                         .attr("width", width / dataset.length - barPadding)
                         .attr("height", d => d + 15)
                         .attr("transform", "translate(" + (margin.left + 5) + "," + (margin.top - 35) + ")")
-                        .attr("fill", (d, i) => dataset[i] == dataset[0] && dataset[i] != dataset[1] ? "rgb(0, 128, 192)" : "rgb(255, 128, 0)");
+                        .style('fill', () => {
+                            if (this.flag) {
+                                this.flag = !this.flag;
+                                return "rgb(0, 128, 192)";
+                            } else {
+                                this.flag = !this.flag;
+                                return "rgb(255, 128, 0)";
+                            }
+                        });
 
                     svg.append("svg")
                         .style("font-size", "18px")
@@ -148,16 +158,6 @@ export class DashboardComponent implements AfterViewInit, AfterContentInit {
                         .text((d, i) => dataset[i] == dataset[0] ? d + "E" : d + "A")
                         .attr("x", (d, i) => i * (width / dataset.length) + 25)
                         .attr("y", d => height - d - 26);
-
-                    // svg.selectAll("text.title")
-                    //     .data(dataset)
-                    //     .enter()
-                    //     .append("text")
-                    //     .text((d, i) => dataset[i] == dataset[0] ? "E" : "A")
-                    //     .text((d, i) => dataset[i] == dataset[0] ? "E" : "A")                        
-                    //     .style("font-size", "14px")
-                    //     .attr("x", (d, i) => i * (width / dataset.length) + 40)
-                    //     .attr("y", 120);
                 }
             }
         },

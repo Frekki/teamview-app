@@ -11,13 +11,11 @@ import { Router } from '@angular/router';
 })
 export class AddteamComponent implements OnInit {
     teamName: String;
-    // sprint: { sprintNumber: Number, spEstimated: Number, spAchieved: Number }[];
     sprintNumber: Number; 
     spEstimated: Number; 
     spAchieved: Number;
     completedAt: Number;
     completed: Boolean;
-    // _creator: Object;
 
     constructor(
         private validateService: ValidateService,
